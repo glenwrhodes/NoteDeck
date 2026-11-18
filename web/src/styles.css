@@ -117,19 +117,25 @@ textarea {
      [ elbow-mid ][ content ]   elbow curves UP-LEFT into the content bar
      [ sidebar   ][ content ]
      [ elbow-foot][ footbar ]
+
+   The frame is exactly the height of the window and never scrolls itself:
+   the elbows, bars and menu stay put, and only .content__scroll (the page
+   inside the frame) scrolls. On phones and very short windows the whole
+   page scrolls instead (sections 13 and 13b).
    ------------------------------------------------------------------ */
 .frame {
   display: grid;
   grid-template-columns: calc(var(--arm) + var(--inner)) minmax(0, 1fr);
-  grid-template-rows: auto 92px 1fr auto;
+  grid-template-rows: auto 92px minmax(0, 1fr) auto;
   grid-template-areas:
     'etop  topbar'
     'emid  content'
     'side  content'
     'efoot footbar';
   row-gap: var(--gap);
-  min-height: 100vh;
-  min-height: 100dvh;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
   padding: 14px 18px 14px 14px;
 }
 

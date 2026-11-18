@@ -37,7 +37,7 @@ Every push is built, started and smoke-tested by CI ([section 10](#10-continuous
 7. [Why Vite](#7-why-vite)
 8. [The design: style and UI choices](#8-the-design-style-and-ui-choices)
 9. [API reference](#9-api-reference)
-10. [Continuous integration and releases](#10-continuous-integration-and-releases)
+10. [Continuous integration](#10-continuous-integration)
 11. [Troubleshooting](#11-troubleshooting)
 12. [License](#12-license)
 

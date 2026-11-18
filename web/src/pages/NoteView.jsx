@@ -44,7 +44,7 @@ export default function NoteView() {
   if (error && !note) {
     return (
       <>
-        <ScreenHeader code={`${recordCode(id)} // Read`} title="Record not found" />
+        <ScreenHeader code={`${recordCode(number)} // Read`} title="Record not found" />
         <Alert>{error}</Alert>
         <Pill to="/notes" color="lilac">
           Back to notes

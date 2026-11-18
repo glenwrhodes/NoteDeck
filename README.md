@@ -483,7 +483,7 @@ Everything sits on pure black, and text on coloured shapes is always black. That
 - Visible focus rings (ice-white outline) on everything you can tab to, plus a "Skip to content" link.
 - Real `<label>`s on every input, `role="alert"` on errors, `role="status"` on notices and loaders.
 - `prefers-reduced-motion` turns off every animation (pulse, blink, the flowing links on Status).
-- Under 760 px wide, the elbows are hidden and the sidebar turns into a row of pills under the top bar, so it works on a phone.
+- Under 760 px wide, the elbows are hidden, the sidebar turns into a row of pills under the top bar, and the whole page scrolls, so it works on a phone.
 
 ---
 

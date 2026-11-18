@@ -98,7 +98,7 @@ NoteDeck/
 ├── LICENSE                 ← MIT
 ├── .gitattributes          ← store text files with LF line endings
 ├── .github/workflows/
-│   └── release.yml         ← CI: build, smoke-test, publish the release zip
+│   └── ci.yml              ← CI: build, start and smoke-test on every push
 ├── api/                    ← backend
 │   ├── Dockerfile
 │   └── src/

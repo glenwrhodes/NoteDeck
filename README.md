@@ -275,11 +275,13 @@ response
 A route is a method + path + handler. From [`api/src/routes/notes.js`](api/src/routes/notes.js):
 
 ```js
-router.get('/:id', async (req, res) => {
-  const { rows } = await pool.query(
-    'SELECT id, title, body, created_at, updated_at FROM notes WHERE id = $1 AND user_id = $2',
-    [id, req.user.id],
-  );
+router.get('/:number', async (req, res) => {
+  const number = readNumber(req);       // "/api/notes/7" -> 7
+  if (!number) return notFound(res);
+  const { rows } = await pool.query(`SELECT ${COLUMNS} FROM notes WHERE user_id = $1 AND number = $2`, [
+    req.user.id,                        // set by the loadUser middleware
+    number,
+  ]);
   if (!rows[0]) return notFound(res);
   res.json({ note: toJson(rows[0]) });
 });

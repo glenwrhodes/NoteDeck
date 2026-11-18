@@ -1,6 +1,9 @@
 // /api/notes/* : create, list, read, update and delete notes.
-// Every query includes "user_id = $n" with the logged-in user's id, so a user
-// can only ever see or change their own notes.
+//
+// Notes are addressed by their per-user number (/api/notes/1 is YOUR first
+// note), never by the database's global id. Every query includes
+// "user_id = <logged-in user>", so a user can only ever see or change their
+// own notes, and nothing in a response reveals anything about other users.
 import { Router } from 'express';
 import { pool } from '../db.js';
 import { requireUser } from '../auth.js';
@@ -20,13 +23,15 @@ function readNote(body) {
   return { title, body: text };
 }
 
-// Note ids are positive integers; anything else can't match a note.
-function readId(req) {
-  return /^\d{1,9}$/.test(req.params.id) ? Number(req.params.id) : null;
+// Note numbers are positive integers; anything else can't match a note.
+function readNumber(req) {
+  return /^\d{1,9}$/.test(req.params.number) ? Number(req.params.number) : null;
 }
 
+const COLUMNS = 'number, title, body, created_at, updated_at';
+
 const toJson = (n) => ({
-  id: n.id,
+  number: n.number,
   title: n.title,
   body: n.body,
   createdAt: n.created_at,
@@ -38,14 +43,14 @@ const notFound = (res) => res.status(404).json({ error: 'Note not found.' });
 // List: newest first, with a short preview instead of the full text.
 router.get('/', async (req, res) => {
   const { rows } = await pool.query(
-    `SELECT id, title, left(body, 160) AS preview, created_at, updated_at
+    `SELECT number, title, left(body, 160) AS preview, created_at, updated_at
        FROM notes WHERE user_id = $1
-      ORDER BY updated_at DESC, id DESC`,
+      ORDER BY updated_at DESC, number DESC`,
     [req.user.id],
   );
   res.json({
     notes: rows.map((n) => ({
-      id: n.id,
+      number: n.number,
       title: n.title,
       preview: n.preview,
       createdAt: n.created_at,
@@ -54,49 +59,57 @@ router.get('/', async (req, res) => {
   });
 });
 
+// Create. One statement does both steps: bump this user's counter, then
+// insert the note with the new number. Updating the user row locks it, so two
+// notes saved at the same moment still get different numbers. Numbers are
+// never reused, even after a note is deleted.
 router.post('/', async (req, res) => {
   const note = readNote(req.body);
   if (note.error) return res.status(400).json({ error: note.error });
   const { rows } = await pool.query(
-    `INSERT INTO notes (user_id, title, body) VALUES ($1, $2, $3)
-     RETURNING id, title, body, created_at, updated_at`,
+    `WITH counter AS (
+       UPDATE users SET note_counter = note_counter + 1 WHERE id = $1 RETURNING note_counter
+     )
+     INSERT INTO notes (user_id, number, title, body)
+     SELECT $1, note_counter, $2, $3 FROM counter
+     RETURNING ${COLUMNS}`,
     [req.user.id, note.title, note.body],
   );
   res.status(201).json({ note: toJson(rows[0]) });
 });
 
-router.get('/:id', async (req, res) => {
-  const id = readId(req);
-  if (!id) return notFound(res);
-  const { rows } = await pool.query(
-    'SELECT id, title, body, created_at, updated_at FROM notes WHERE id = $1 AND user_id = $2',
-    [id, req.user.id],
-  );
+router.get('/:number', async (req, res) => {
+  const number = readNumber(req);
+  if (!number) return notFound(res);
+  const { rows } = await pool.query(`SELECT ${COLUMNS} FROM notes WHERE user_id = $1 AND number = $2`, [
+    req.user.id,
+    number,
+  ]);
   if (!rows[0]) return notFound(res);
   res.json({ note: toJson(rows[0]) });
 });
 
-router.put('/:id', async (req, res) => {
-  const id = readId(req);
-  if (!id) return notFound(res);
+router.put('/:number', async (req, res) => {
+  const number = readNumber(req);
+  if (!number) return notFound(res);
   const note = readNote(req.body);
   if (note.error) return res.status(400).json({ error: note.error });
   const { rows } = await pool.query(
     `UPDATE notes SET title = $1, body = $2, updated_at = now()
-      WHERE id = $3 AND user_id = $4
-     RETURNING id, title, body, created_at, updated_at`,
-    [note.title, note.body, id, req.user.id],
+      WHERE user_id = $3 AND number = $4
+     RETURNING ${COLUMNS}`,
+    [note.title, note.body, req.user.id, number],
   );
   if (!rows[0]) return notFound(res);
   res.json({ note: toJson(rows[0]) });
 });
 
-router.delete('/:id', async (req, res) => {
-  const id = readId(req);
-  if (!id) return notFound(res);
-  const { rowCount } = await pool.query('DELETE FROM notes WHERE id = $1 AND user_id = $2', [
-    id,
+router.delete('/:number', async (req, res) => {
+  const number = readNumber(req);
+  if (!number) return notFound(res);
+  const { rowCount } = await pool.query('DELETE FROM notes WHERE user_id = $1 AND number = $2', [
     req.user.id,
+    number,
   ]);
   if (!rowCount) return notFound(res);
   res.status(204).end();

@@ -1090,8 +1090,12 @@ textarea {
     font-size: 1rem;
   }
 
+  /* The desktop stripe is a straight inset shadow; on a round pill it would
+     show as a white half-circle. Pills get an inner ring that follows the
+     curve instead. */
   .nav__item.is-active {
-    padding-right: 26px;
+    box-shadow: inset 0 0 0 3px var(--c-ice);
+    padding-right: 18px;
   }
 
   .content__body {

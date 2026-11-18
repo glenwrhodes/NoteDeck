@@ -331,7 +331,7 @@ Browsers don't understand JSX, and an app made of hundreds of modules (React, th
 
 **Production (`npm run build`).** Vite bundles, tree-shakes (drops unused code) and minifies everything into a few files in `dist/`, with a content hash in each name (`index-BVqZzaZW.js`). That hash lets nginx tell browsers to cache assets for a year: a new build means new file names. Here the whole app ships as one ~87 KB (gzipped) JavaScript file plus CSS and fonts.
 
-**Why Vite rather than the alternatives?** Create React App, the old default, is deprecated. It was slow, because it bundled everything with webpack before showing anything. Vite is now the standard starting point that React's own docs suggest for a client-side app. It needs almost no config: see [`web/vite.config.js`](web/vite.config.js).
+**Why Vite rather than the alternatives?** Create React App, the old default, is deprecated. It was slow, because it bundled everything with webpack before showing anything. Vite has become the usual choice for a client-side React app, and React's own docs list it as a way to build a React app from scratch. It needs almost no config: see [`web/vite.config.js`](web/vite.config.js).
 
 ### Dev mode with hot reload (optional)
 

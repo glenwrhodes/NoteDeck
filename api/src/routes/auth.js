@@ -54,7 +54,7 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { username, password } = readCredentials(req.body);
   const { rows } = await pool.query(
-    'SELECT id, username, password_hash, created_at FROM users WHERE username = $1',
+    'SELECT public_id, username, password_hash, created_at FROM users WHERE username = $1',
     [username],
   );
   const user = rows[0];

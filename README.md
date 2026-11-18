@@ -1,8 +1,28 @@
 # NoteDeck
 
+[![Build, test and release](https://github.com/glenwrhodes/NoteDeck/actions/workflows/release.yml/badge.svg)](https://github.com/glenwrhodes/NoteDeck/actions/workflows/release.yml)
+[![Latest release](https://img.shields.io/github/v/release/glenwrhodes/NoteDeck?label=download)](https://github.com/glenwrhodes/NoteDeck/releases/latest)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+
 A small full-stack notes app with a sci-fi control-panel look. You register, log in, and write plain-text notes that only you can see.
 
 It is also a teaching project. Everything runs with **Docker Compose**: a **React** frontend built by **Vite**, a **Node.js + Express** API, and **PostgreSQL**. This README explains each piece and how they fit together, and why the UI looks the way it does.
+
+## Download
+
+**[⬇ Download NoteDeck.zip (latest release)](https://github.com/glenwrhodes/NoteDeck/releases/latest/download/NoteDeck.zip)**. No GitHub account needed. Older versions are on the [releases page](https://github.com/glenwrhodes/NoteDeck/releases).
+
+The zip contains everything needed to run the app with Docker Compose, and nothing else. Every release is built by CI, which unzips that exact file, starts it, and passes the full smoke test before publishing it ([section 10](#10-continuous-integration-and-releases)). Developers can also `git clone https://github.com/glenwrhodes/NoteDeck.git` instead, which adds the smoke test and the CI workflow.
+
+**Requirements**
+
+- **Docker** with Compose v2:
+  - Windows 10/11 or macOS (Intel or Apple silicon): [Docker Desktop](https://www.docker.com/products/docker-desktop/), which includes Compose.
+  - Linux: Docker Engine plus the Compose plugin (`docker compose version` should work).
+- **An internet connection on the first run**, to download the base images and npm packages.
+- **A couple of GB of free disk space** for the images.
+- **Port 8088 free**, or pick another one (see below).
+- You do **not** need Node.js or PostgreSQL installed: both run inside Docker.
 
 ## Contents
 
@@ -15,16 +35,17 @@ It is also a teaching project. Everything runs with **Docker Compose**: a **Reac
 7. [Why Vite](#7-why-vite)
 8. [The design: style and UI choices](#8-the-design-style-and-ui-choices)
 9. [API reference](#9-api-reference)
-10. [Troubleshooting](#10-troubleshooting)
+10. [Continuous integration and releases](#10-continuous-integration-and-releases)
+11. [Troubleshooting](#11-troubleshooting)
+12. [License](#12-license)
 
 ---
 
 ## 1. Quick start
 
-**You need:** [Docker Desktop](https://www.docker.com/products/docker-desktop/) (it includes Docker Compose). Node.js is *not* needed to run the app: it is built inside Docker.
+Unzip the download (or clone the repo), open a terminal in the `NoteDeck` folder, and run:
 
 ```bash
-# from this folder
 docker compose up --build
 ```
 

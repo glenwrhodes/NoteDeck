@@ -61,7 +61,7 @@ The first run downloads the base images and builds ours, which takes a minute or
 
 **Port 8088 already in use?** Copy `.env.example` to `.env`, set `WEB_PORT=8090` (or any free port), and start again.
 
-**Check that it all works** (in a clone of the repo; the script isn't in the zip): with the app running, `node scripts/smoke-test.mjs` (needs Node 20+) runs 38 checks through the whole stack: registering, logging in, every notes operation, per-user note numbers, and that one user can never see another user's notes.
+**Check that it all works** (in a clone of the repo; the script isn't in the zip): with the app running, `node scripts/smoke-test.mjs` (needs Node 20+) runs 39 checks through the whole stack: registering, logging in, every notes operation, per-user note numbers, and that one user can never see another user's notes.
 
 ---
 

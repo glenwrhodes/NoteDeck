@@ -56,7 +56,7 @@ export default function NoteView() {
 
   return (
     <>
-      <ScreenHeader code={`${recordCode(note.id)} // Read`} title={note.title}>
+      <ScreenHeader code={`${recordCode(note.number)} // Read`} title={note.title}>
         {confirming ? (
           <>
             <Pill color="red" className="pill--alert" onClick={handleDelete} disabled={deleting}>

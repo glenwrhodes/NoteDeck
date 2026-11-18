@@ -59,9 +59,9 @@ export default function NotesList() {
           </div>
           <ul className="records">
             {notes.map((note, i) => (
-              <li key={note.id}>
-                <Link to={`/notes/${note.id}`} className={`record c-${TAB_COLORS[i % TAB_COLORS.length]}`}>
-                  <span className="record__tab">{recordCode(note.id)}</span>
+              <li key={note.number}>
+                <Link to={`/notes/${note.number}`} className={`record c-${TAB_COLORS[i % TAB_COLORS.length]}`}>
+                  <span className="record__tab">{recordCode(note.number)}</span>
                   <span className="record__main">
                     <span className="record__title">{note.title}</span>
                     {note.preview && <span className="record__preview">{note.preview}</span>}

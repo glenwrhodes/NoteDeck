@@ -30,7 +30,7 @@ jobs:
     timeout-minutes: 20
     env:
       VERSION: v1.0.${{ github.run_number }}
-      APP_DIR: ${{ github.workspace }}/../release-check/NoteDeck
+      APP_DIR: /tmp/release-check/NoteDeck # where the zip gets unzipped and run
 
     steps:
       - name: Check out the code

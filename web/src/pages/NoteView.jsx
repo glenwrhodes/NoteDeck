@@ -7,7 +7,7 @@ import Pill from '../components/Pill.jsx';
 import { Alert, Loading, Notice } from '../components/Feedback.jsx';
 
 export default function NoteView() {
-  const { id } = useParams();
+  const { number } = useParams(); // the :number part of /notes/:number
   const navigate = useNavigate();
   const location = useLocation();
   const [note, setNote] = useState(null);
@@ -19,20 +19,21 @@ export default function NoteView() {
     let ignore = false;
     setNote(null);
     setError('');
+    setConfirming(false);
     api
-      .getNote(id)
+      .getNote(number)
       .then((data) => !ignore && setNote(data.note))
       .catch((err) => !ignore && setError(err.message));
     return () => {
       ignore = true;
     };
-  }, [id]);
+  }, [number]);
 
   async function handleDelete() {
     setDeleting(true);
     try {
-      await api.deleteNote(id);
-      navigate('/notes', { state: { flash: `Record ${recordCode(id)} deleted` } });
+      await api.deleteNote(number);
+      navigate('/notes', { state: { flash: `Record ${recordCode(number)} deleted` } });
     } catch (err) {
       setError(err.message);
       setDeleting(false);

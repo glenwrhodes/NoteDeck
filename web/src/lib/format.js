@@ -8,8 +8,8 @@ export function stamp(iso) {
   return `${d.getFullYear()}.${pad(d.getMonth() + 1)}.${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-// 7 -> "ND-0007"
-export const recordCode = (id) => `ND-${String(id).padStart(4, '0')}`;
+// A note's per-user number as a record code: 7 -> "ND-0007"
+export const recordCode = (number) => `ND-${String(number).padStart(4, '0')}`;
 
 // 3725 -> "1H 02M 05S"
 export function duration(totalSeconds) {

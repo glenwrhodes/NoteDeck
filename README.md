@@ -1,7 +1,6 @@
 # NoteDeck
 
-[![Build, test and release](https://github.com/glenwrhodes/NoteDeck/actions/workflows/release.yml/badge.svg)](https://github.com/glenwrhodes/NoteDeck/actions/workflows/release.yml)
-[![Latest release](https://img.shields.io/github/v/release/glenwrhodes/NoteDeck?label=download)](https://github.com/glenwrhodes/NoteDeck/releases/latest)
+[![CI](https://github.com/glenwrhodes/NoteDeck/actions/workflows/ci.yml/badge.svg)](https://github.com/glenwrhodes/NoteDeck/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 A small full-stack notes app with a sci-fi control-panel look. You register, log in, and write plain-text notes that only you can see.

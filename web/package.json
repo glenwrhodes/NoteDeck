@@ -1,0 +1,12 @@
+{
+  "name": "notedeck-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NoteDeck frontend: a React app built with Vite",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  }
+}

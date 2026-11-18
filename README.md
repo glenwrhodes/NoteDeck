@@ -361,16 +361,21 @@ Why it suits a notes app: the console metaphor maps onto the app naturally. Note
 The page is one CSS grid ([`styles.css`](web/src/styles.css), section 3). The left column holds three elbows and the sidebar; the right column holds the top bar, the page and the footer:
 
 ```
-╭───────────────╮
-│ ███████████   │  NOTEDECK                         LOGGED IN AS GLEN [LOG OUT]
-│ ██████████████╰═══════════════════════════════════════════════════════(  ← top elbow + bar
-│
-│ ██████████████╭═══ RECORDS CONSOLE ═══════════════════════════════════(  ← mid elbow + bar
-│ [01     NOTES ]
-│ [02  NEW NOTE ]      the current page
-│ [03    STATUS ]
-│ [   04-ONLINE ]
-│ ██████████████╰═══════════════════════════════════════════════════════(  ← foot elbow + bar
+┌──────────────┬─────────────────────────────────────────────────┐
+│ elbow-top  ╰ │  NOTEDECK                  LOGGED IN AS  [LOG OUT]│
+│              │ ════════════════ top bar ══════════════════════ )│
+├──────────────┼─────────────────────────────────────────────────┤
+│ elbow-mid  ╭ │ ═══ RECORDS CONSOLE ═══ content bar ═══════════ )│
+│              │                                                 │
+├──────────────┤   the current page (<Outlet />)                 │
+│ 01     NOTES │                                                 │
+│ 02  NEW NOTE │                                                 │
+│ 03    STATUS │                                                 │
+│    04-ONLINE │                                                 │
+├──────────────┼─────────────────────────────────────────────────┤
+│ elbow-foot ╰ │  NOTEDECK V1.0 · SESSION ACTIVE                 │
+│              │ ═══════════════ footer bar ════════════════════ )│
+└──────────────┴─────────────────────────────────────────────────┘
 ```
 
 Each bar starts in the same colour as the elbow it grows out of, so they read as one bent shape. The bars are split into segments by the same 6 px black gap used everywhere, and end in a rounded cap.

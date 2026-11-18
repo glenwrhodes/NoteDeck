@@ -37,7 +37,7 @@ router.post('/register', async (req, res) => {
   const hash = await hashPassword(password);
   try {
     const { rows } = await pool.query(
-      'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING id, username, created_at',
+      'INSERT INTO users (username, password_hash) VALUES ($1, $2) RETURNING public_id, username, created_at',
       [username, hash],
     );
     setSessionCookie(res, rows[0]);

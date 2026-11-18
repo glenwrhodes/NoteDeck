@@ -1121,6 +1121,22 @@ textarea {
   }
 }
 
+/* ---- 13b. Short windows -----------------------------------------------
+   Below 560px tall a pinned frame would leave almost no room for the page,
+   so the whole page scrolls instead.
+   ------------------------------------------------------------------ */
+@media (max-height: 560px) {
+  .frame {
+    height: auto;
+    min-height: 100vh;
+    overflow: visible;
+  }
+
+  .content__scroll {
+    overflow: visible;
+  }
+}
+
 /* ---- 14. Reduced motion --------------------------------------------- */
 @media (prefers-reduced-motion: reduce) {
   *,

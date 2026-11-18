@@ -1050,7 +1050,15 @@ textarea {
       'side'
       'content'
       'footbar';
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow: visible;
     padding: 10px;
+  }
+
+  .content__scroll {
+    overflow: visible;
   }
 
   .elbow,

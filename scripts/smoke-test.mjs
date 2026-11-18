@@ -45,6 +45,17 @@ function client() {
     } catch {}
     return { status: res.status, json, text };
   };
+  call.cookie = () => cookie;
+  return call;
+}
+
+// Decode the payload of the session JWT (the middle part, base64url JSON).
+function sessionPayload(cookie) {
+  try {
+    return JSON.parse(Buffer.from(cookie.split('=')[1].split('.')[1], 'base64url').toString());
+  } catch {
+    return null;
+  }
 }
 
 const suffix = Date.now().toString(36);

@@ -42,6 +42,7 @@ const SCHEMA = `
   );
 
   -- Upgrade a database created by v1, before per-user numbers existed.
+  ALTER TABLE users ADD COLUMN IF NOT EXISTS public_id UUID NOT NULL DEFAULT gen_random_uuid();
   ALTER TABLE users ADD COLUMN IF NOT EXISTS note_counter INTEGER NOT NULL DEFAULT 0;
   ALTER TABLE notes ADD COLUMN IF NOT EXISTS number INTEGER;
   UPDATE notes SET number = numbered.n

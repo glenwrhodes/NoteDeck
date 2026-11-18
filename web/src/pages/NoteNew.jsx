@@ -8,7 +8,7 @@ export default function NoteNew() {
 
   async function create(note) {
     const data = await api.createNote(note);
-    navigate(`/notes/${data.note.id}`, { state: { flash: 'Record created' } });
+    navigate(`/notes/${data.note.number}`, { state: { flash: 'Record created' } });
   }
 
   return (

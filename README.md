@@ -119,7 +119,7 @@ NoteDeck/
 │       ├── lib/            ← api.js (fetch wrapper), format.js
 │       ├── components/     ← Layout, Sidebar, UserMenu, Bar, Pill, NoteForm...
 │       └── pages/          ← Login, Register, NotesList, NoteView, NoteNew, NoteEdit, Status
-└── scripts/smoke-test.mjs  ← end-to-end test of the running stack
+└── scripts/smoke-test.mjs  ← end-to-end test of the running stack (used by CI)
 ```
 
 ---

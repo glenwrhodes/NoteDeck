@@ -520,7 +520,7 @@ Every push to `main` runs [`.github/workflows/release.yml`](.github/workflows/re
 
 1. **Package** `NoteDeck.zip` with `git archive`. It takes only committed files, and only `README.md`, `LICENSE`, `docker-compose.yml`, `.env.example`, `api/` and `web/`, so `node_modules`, `.env` files, the tests and the CI config can't end up in the download.
 2. **Unzip it into an empty folder** and run `docker compose up --build --wait` *from there*. That proves the zip itself is complete, not just the repo.
-3. **Smoke test:** `node scripts/smoke-test.mjs` runs all 38 checks against the running stack. If anything fails, the job prints the containers' logs and stops: nothing is published.
+3. **Smoke test:** `node scripts/smoke-test.mjs` runs all 39 checks against the running stack. If anything fails, the job prints the containers' logs and stops: nothing is published.
 4. **Publish** a GitHub release named `v1.0.<run number>` with `NoteDeck.zip` attached, and mark it *latest*. That's why the download link at the top (`releases/latest/download/NoteDeck.zip`) always gets the newest tested build.
 
 Things to notice in the workflow file:

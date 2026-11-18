@@ -293,7 +293,8 @@ This uses **Express 5**, which passes errors from `async` handlers straight to t
 
 - **Passwords** are never stored as text. They're hashed with **bcrypt** (`bcryptjs`), which is deliberately slow and salted.
 - After register or log in, the API sets a **session cookie** containing a signed token (a JWT). It is `httpOnly` (JavaScript in the page can't read it) and `SameSite=Lax`.
-- `loadUser` checks the token's signature *and* that the user still exists, so a reset database can't map an old cookie onto a new account.
+- A JWT is signed, not encrypted: anyone can decode their own cookie and read what's inside. So the token identifies you by a random **public id** (a UUID made by Postgres), never by the database's counting id, which would hint at how many accounts exist.
+- `loadUser` checks the token's signature *and* looks the public id up in the database. A deleted account, or an old cookie after the database was reset, simply doesn't match anyone.
 - A wrong username and a wrong password give the same error and take about the same time, so the login form doesn't reveal which usernames exist.
 
 ### Each user only sees their own notes

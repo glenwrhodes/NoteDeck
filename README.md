@@ -421,6 +421,8 @@ The page is one CSS grid ([`styles.css`](web/src/styles.css), section 3). The le
 
 Each bar starts in the same colour as the elbow it grows out of, so they read as one bent shape. The bars are split into segments by the same 6 px black gap used everywhere, and end in a rounded cap.
 
+**The frame is pinned to the window; only the page inside it scrolls.** A control panel is a fixed piece of hardware: the screens change, the console doesn't. So `.frame` is exactly `100dvh` tall with `overflow: hidden`, and the grid row for the page is `minmax(0, 1fr)`, which lets it shrink below its content instead of stretching the frame. The page area (`.content__scroll`) has `overflow-y: auto` and a thin lilac scrollbar. A long note or the Status screen scrolls inside the frame, while the menu, the top bar and the bottom elbow always stay in view. Because the window itself no longer scrolls, `Layout` scrolls the page area back to the top whenever you change pages. On phones, and in windows under 560 px tall, a pinned frame would leave almost no room for the page, so there the whole page scrolls normally.
+
 ### How an elbow is made
 
 There are no images: each elbow is a single `<div>` and two CSS rules.

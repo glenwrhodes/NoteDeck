@@ -475,7 +475,7 @@ Everything sits on pure black, and text on coloured shapes is always black. That
 - **Record rows** each have a coloured tab with the record code, cycling through four colours so long lists stay scannable. The title, a one-line preview and a timestamp follow.
 - **Delete is two steps:** DELETE turns into a pulsing red CONFIRM DELETE + CANCEL, all in place. There's no browser pop-up, so it stays in the visual language.
 - **Feedback** always appears in the same place: teal notices ("RECORD CREATED"), red alerts with a title ("ACCESS DENIED"), and a row of blinking colour blocks while loading.
-- **The Status screen** turns the architecture into UI. It draws the request path (`BROWSER → web → api → db` with the ports on the links) and shows live facts from each container, such as the api container's ID and the Postgres version. It ties the Docker section of this README to something you can see.
+- **The Status screen** turns the architecture into UI. It draws the request path (`BROWSER → web → api → db` with the ports on the links) and shows live facts from each container, such as the api container's ID and the Postgres version. It ties the Docker section of this README to something you can see. Each ONLINE has a teal status light with a soft glow, which pulses but never dims below 70%, so it reads as lit at any moment.
 - **Small conveniences:** `Ctrl+Enter` saves a note, title and character counters update as you type, and the tab title follows the page.
 
 ### Accessibility and responsiveness

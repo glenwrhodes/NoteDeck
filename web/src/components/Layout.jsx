@@ -1,7 +1,11 @@
 // The console frame around every page: three elbows, the top bar with the
 // user menu, the sidebar menu, and the footer. The current page is rendered
 // where <Outlet /> is.
-import { Link, Outlet } from 'react-router';
+//
+// The frame is pinned to the browser window; only the page area inside it
+// scrolls (see .frame and .content__scroll in styles.css).
+import { useEffect, useRef } from 'react';
+import { Link, Outlet, useLocation } from 'react-router';
 import { useAuth } from '../auth/AuthContext.jsx';
 import Bar from './Bar.jsx';
 import Sidebar from './Sidebar.jsx';

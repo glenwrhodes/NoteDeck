@@ -8,7 +8,7 @@ import Pill from '../components/Pill.jsx';
 import { Alert, Loading } from '../components/Feedback.jsx';
 
 export default function NoteEdit() {
-  const { id } = useParams(); // the :id part of /notes/:id/edit
+  const { number } = useParams(); // the :number part of /notes/:number/edit
   const navigate = useNavigate();
   const [note, setNote] = useState(null);
   const [error, setError] = useState('');
@@ -16,23 +16,23 @@ export default function NoteEdit() {
   useEffect(() => {
     let ignore = false;
     api
-      .getNote(id)
+      .getNote(number)
       .then((data) => !ignore && setNote(data.note))
       .catch((err) => !ignore && setError(err.message));
     return () => {
       ignore = true;
     };
-  }, [id]);
+  }, [number]);
 
   async function save(changes) {
-    await api.updateNote(id, changes);
-    navigate(`/notes/${id}`, { state: { flash: 'Changes saved' } });
+    await api.updateNote(number, changes);
+    navigate(`/notes/${number}`, { state: { flash: 'Changes saved' } });
   }
 
   if (error) {
     return (
       <>
-        <ScreenHeader code={`${recordCode(id)} // Edit`} title="Record unavailable" />
+        <ScreenHeader code={`${recordCode(number)} // Edit`} title="Record unavailable" />
         <Alert>{error}</Alert>
         <Pill to="/notes" color="lilac">
           Back to notes
@@ -44,8 +44,8 @@ export default function NoteEdit() {
 
   return (
     <>
-      <ScreenHeader code={`${recordCode(note.id)} // Edit`} title="Edit note" />
-      <NoteForm initial={note} submitLabel="Save changes" onSubmit={save} cancelTo={`/notes/${note.id}`} />
+      <ScreenHeader code={`${recordCode(note.number)} // Edit`} title="Edit note" />
+      <NoteForm initial={note} submitLabel="Save changes" onSubmit={save} cancelTo={`/notes/${note.number}`} />
     </>
   );
 }

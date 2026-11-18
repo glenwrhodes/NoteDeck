@@ -71,12 +71,14 @@ export default function Layout() {
       </div>
       <Sidebar />
 
-      <main id="main" className="content" tabIndex={-1}>
+      <div className="content">
         <Bar segments={CONTENT_BAR} />
-        <div className="content__body">
-          <Outlet />
-        </div>
-      </main>
+        <main id="main" className="content__scroll" tabIndex={-1} ref={scrollRef}>
+          <div className="content__body">
+            <Outlet />
+          </div>
+        </main>
+      </div>
 
       <div className="elbow elbow--foot c-violet" aria-hidden="true" />
       <footer className="footbar">

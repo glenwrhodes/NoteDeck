@@ -511,7 +511,25 @@ Rules: usernames are 3-32 characters (`a-z 0-9 . _ -`, case-insensitive), passwo
 
 ---
 
-## 10. Troubleshooting
+## 10. Continuous integration and releases
+
+Every push to `main` runs [`.github/workflows/release.yml`](.github/workflows/release.yml) on a fresh GitHub-hosted Linux machine. It is the same Docker workflow as in this README, automated:
+
+1. **Package** `NoteDeck.zip` with `git archive`. It takes only committed files, and only `README.md`, `LICENSE`, `docker-compose.yml`, `.env.example`, `api/` and `web/`, so `node_modules`, `.env` files, the tests and the CI config can't end up in the download.
+2. **Unzip it into an empty folder** and run `docker compose up --build --wait` *from there*. That proves the zip itself is complete, not just the repo.
+3. **Smoke test:** `node scripts/smoke-test.mjs` runs all 38 checks against the running stack. If anything fails, the job prints the containers' logs and stops: nothing is published.
+4. **Publish** a GitHub release named `v1.0.<run number>` with `NoteDeck.zip` attached, and mark it *latest*. That's why the download link at the top (`releases/latest/download/NoteDeck.zip`) always gets the newest tested build.
+
+Things to notice in the workflow file:
+
+- `permissions: contents: write` lets the job's built-in `GITHUB_TOKEN` create releases. No personal token or secret is needed.
+- `concurrency: release` makes two quick pushes queue up instead of publishing at the same time.
+- The release is created with the `gh` CLI, which is preinstalled on GitHub's runners.
+- You can also start a run by hand from the repo's **Actions** tab (`workflow_dispatch`).
+
+---
+
+## 11. Troubleshooting
 
 | Problem | Fix |
 | --- | --- |

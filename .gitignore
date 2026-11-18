@@ -1,0 +1,21 @@
+# Dependencies (reinstalled from package-lock.json)
+node_modules/
+
+# Build output
+dist/
+
+# Local settings and secrets
+.env
+.env.*
+!.env.example
+
+# Logs
+npm-debug.log*
+*.log
+
+# Editors and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini

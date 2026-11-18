@@ -7,11 +7,14 @@ A small full-stack notes app with a sci-fi control-panel look. You register, log
 
 It is also a teaching project. Everything runs with **Docker Compose**: a **React** frontend built by **Vite**, a **Node.js + Express** API, and **PostgreSQL**. This README explains each piece and how they fit together, and why the UI looks the way it does.
 
-## Download
+## Get the code
 
-**[⬇ Download NoteDeck.zip (latest release)](https://github.com/glenwrhodes/NoteDeck/releases/latest/download/NoteDeck.zip)**. No GitHub account needed. Older versions are on the [releases page](https://github.com/glenwrhodes/NoteDeck/releases).
+NoteDeck runs straight from its source code; there's nothing to install. Either:
 
-The zip contains everything needed to run the app with Docker Compose, and nothing else. Every release is built by CI, which unzips that exact file, starts it, and passes the full smoke test before publishing it ([section 10](#10-continuous-integration-and-releases)). Developers can also `git clone https://github.com/glenwrhodes/NoteDeck.git` instead, which adds the smoke test and the CI workflow.
+- **Clone it:** `git clone https://github.com/glenwrhodes/NoteDeck.git`
+- **Or download it without git:** on the repo page, click the green **Code** button, then **Download ZIP** ([direct link](https://github.com/glenwrhodes/NoteDeck/archive/refs/heads/main.zip)), and unzip it. No GitHub account needed. The folder is called `NoteDeck-main`.
+
+Every push is built, started and smoke-tested by CI ([section 10](#10-continuous-integration)), so the code on `main` is known to run.
 
 **Requirements**
 

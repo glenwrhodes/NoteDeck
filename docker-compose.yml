@@ -1,0 +1,82 @@
+# NoteDeck: three services that Docker Compose runs together.
+#
+#   browser --> web (nginx, port 8088 on your PC) --> api (Node, :3000) --> db (Postgres, :5432)
+#
+# Start:  docker compose up --build
+# Stop:   docker compose down        (keeps your notes, in the volume)
+# Reset:  docker compose down -v     (also deletes the volume, so all data)
+#
+# Values like ${WEB_PORT:-8088} come from a .env file next to this one if you
+# create it (see .env.example); otherwise the default after ":-" is used.
+
+name: notedeck
+
+services:
+  # ---- PostgreSQL database -----------------------------------------------
+  db:
+    image: postgres:17-alpine # an official image from Docker Hub, used as-is
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: notedeck
+      POSTGRES_USER: notedeck
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-notedeck-dev-password}
+    volumes:
+      # The database files live in a named volume, not in the container.
+      # Containers can be deleted and recreated; the volume (and data) stays.
+      - pgdata:/var/lib/postgresql/data
+    # No "ports:" here on purpose. The database is reachable only by other
+    # containers on the Compose network, not from your PC or the internet.
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U notedeck -d notedeck']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    networks: [backend]
+
+  # ---- Node.js / Express API -------------------------------------------
+  api:
+    build: ./api # build our own image from api/Dockerfile
+    image: notedeck-api
+    restart: unless-stopped
+    environment:
+      PORT: 3000
+      # "db" is the service name above. Compose's DNS resolves it to the
+      # db container's address on the backend network.
+      DATABASE_URL: postgres://notedeck:${POSTGRES_PASSWORD:-notedeck-dev-password}@db:5432/notedeck
+      JWT_SECRET: ${JWT_SECRET:-dev-only-secret-change-me}
+      COOKIE_SECURE: 'false'
+    depends_on:
+      db:
+        condition: service_healthy # wait until Postgres accepts connections
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/api/health']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 5s
+    # Also no "ports:". Only the web service talks to the API.
+    networks: [frontend, backend]
+
+  # ---- React app served by nginx -----------------------------------------
+  web:
+    build: ./web # multi-stage build: Node builds, nginx serves
+    image: notedeck-web
+    restart: unless-stopped
+    ports:
+      # HOST:CONTAINER. Your PC's port 8088 goes to port 80 in the container.
+      # This is the ONLY port of the whole app that is published.
+      - '${WEB_PORT:-8088}:80'
+    depends_on:
+      api:
+        condition: service_healthy
+    networks: [frontend]
+
+# Two networks: web can reach api, api can reach db, but web can't reach db.
+networks:
+  frontend:
+  backend:
+
+# Named volume for the database files. Survives "docker compose down".
+volumes:
+  pgdata:

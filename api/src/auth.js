@@ -44,13 +44,14 @@ export async function loadUser(req, _res, next) {
   if (!token) return next();
   try {
     const payload = jwt.verify(token, JWT_SECRET);
-    // Check the account still exists (and is the same account): the database
-    // may have been reset since the cookie was issued.
-    const { rows } = await pool.query(
-      'SELECT id, username, created_at FROM users WHERE id = $1 AND username = $2',
-      [Number(payload.sub), payload.username],
-    );
-    req.user = rows[0] || null;
+    // Look the account up by its public id. A deleted account, or a cookie
+    // from before the database was reset, matches nobody.
+    if (typeof payload.sub === 'string' && UUID_RE.test(payload.sub)) {
+      const { rows } = await pool.query('SELECT id, username, created_at FROM users WHERE public_id = $1', [
+        payload.sub,
+      ]);
+      req.user = rows[0] || null;
+    }
   } catch {
     req.user = null; // expired or tampered token: treat as logged out
   }

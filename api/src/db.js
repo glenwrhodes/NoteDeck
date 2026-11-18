@@ -19,9 +19,12 @@ export const pool = new pg.Pool({
 // how many notes other people have. Each note therefore also gets a per-user
 // `number` (1, 2, 3... for each user), taken from users.note_counter. The API
 // and the UI only ever use that number; the global id stays internal.
+// For the same reason the session token names a user by a random public_id
+// (a UUID), not by users.id.
 const SCHEMA = `
   CREATE TABLE IF NOT EXISTS users (
     id            SERIAL PRIMARY KEY,
+    public_id     UUID        NOT NULL DEFAULT gen_random_uuid(),
     username      TEXT        NOT NULL UNIQUE,
     password_hash TEXT        NOT NULL,
     note_counter  INTEGER     NOT NULL DEFAULT 0,

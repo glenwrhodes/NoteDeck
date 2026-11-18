@@ -68,7 +68,7 @@ export default function NoteView() {
           </>
         ) : (
           <>
-            <Pill to={`/notes/${note.id}/edit`} color="sky">
+            <Pill to={`/notes/${note.number}/edit`} color="sky">
               Edit
             </Pill>
             <Pill color="red" onClick={() => setConfirming(true)}>

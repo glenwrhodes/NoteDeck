@@ -1,0 +1,12 @@
+# Store text files with LF line endings. The Dockerfiles, nginx.conf and
+# scripts are used inside Linux containers and on the Linux CI runner, so LF
+# everywhere avoids "works on Windows, breaks in the container" surprises.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.zip binary

@@ -79,6 +79,7 @@ check('invalid JSON rejected (400)', r.status === 400);
 
 r = await a('POST', '/api/auth/register', alice);
 check('alice registers (201)', r.status === 201 && r.json?.user?.username === alice.username);
+check('user response has no database id', r.json?.user && !('id' in r.json.user));
 r = await anon('POST', '/api/auth/register', alice);
 check('duplicate username rejected (409)', r.status === 409);
 r = await a('GET', '/api/auth/me');

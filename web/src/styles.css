@@ -937,13 +937,28 @@ textarea {
   text-transform: uppercase;
 }
 
+/* A glowing status light. It pulses gently but never drops below 70%
+   opacity, so it reads as "lit" in any frame of the animation. */
 .online::before {
   content: '';
-  width: 10px;
-  height: 10px;
+  flex: none;
+  width: 11px;
+  height: 11px;
   border-radius: 50%;
   background: var(--c-teal);
-  animation: blink 1.6s ease-in-out infinite;
+  box-shadow:
+    0 0 0 3px rgb(94 211 195 / 0.22),
+    0 0 10px 2px rgb(94 211 195 / 0.65);
+  animation: beacon 1.8s ease-in-out infinite;
+}
+
+@keyframes beacon {
+  50% {
+    opacity: 0.7;
+    box-shadow:
+      0 0 0 3px rgb(94 211 195 / 0.12),
+      0 0 4px 1px rgb(94 211 195 / 0.4);
+  }
 }
 
 /* ---- 12. Feedback ------------------------------------------------------ */

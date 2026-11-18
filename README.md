@@ -298,7 +298,23 @@ This uses **Express 5**, which passes errors from `async` handlers straight to t
 
 Every notes query includes `user_id = <the logged-in user>`. A note that belongs to someone else behaves exactly like one that doesn't exist (404), so you can't even tell it's there. All SQL uses **parameters** (`$1`, `$2`), never string concatenation, which prevents SQL injection.
 
-The tables are created by [`api/src/db.js`](api/src/db.js) when the API starts (`CREATE TABLE IF NOT EXISTS`), so there's no separate migration step.
+### Note numbers that give nothing away
+
+The database gives every note an `id` from one counter shared by all users. If the app showed that id, your first note might be `ND-0003`, which tells you two other notes exist. A URL like `/notes/3` would leak the same thing.
+
+So each note also gets a **per-user number**: your notes are 1, 2, 3..., whoever else uses the server. The API and the UI only ever use that number: URLs are `/notes/1`, record codes are `ND-0001`, and responses contain no database ids for notes or users. The number comes from a counter on the user's row, bumped in the same SQL statement that inserts the note:
+
+```sql
+WITH counter AS (
+  UPDATE users SET note_counter = note_counter + 1 WHERE id = $1 RETURNING note_counter
+)
+INSERT INTO notes (user_id, number, title, body)
+SELECT $1, note_counter, $2, $3 FROM counter
+```
+
+Updating the user's row locks it, so two notes saved at the same moment still get different numbers. A unique index on `(user_id, number)` guarantees it. Numbers are never reused: delete note 2 and the next note is still 4, like invoice numbers.
+
+The tables are created by [`api/src/db.js`](api/src/db.js) when the API starts (`CREATE TABLE IF NOT EXISTS`), so there's no separate migration step. The same file also upgrades a database from the first version: it numbers existing notes per user, in the order they were written.
 
 ---
 

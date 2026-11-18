@@ -17,8 +17,10 @@ export const DUMMY_HASH = bcrypt.hashSync('not-a-real-password', 12);
 
 // The session is a signed token (JWT) in an httpOnly cookie. httpOnly means
 // page JavaScript can't read it, which protects it from injected scripts.
+// A JWT is signed, not encrypted: its owner can decode it. So it carries only
+// the user's random public_id (a UUID), never the counting database id.
 export function setSessionCookie(res, user) {
-  const token = jwt.sign({ sub: String(user.id), username: user.username }, JWT_SECRET, {
+  const token = jwt.sign({ sub: user.public_id }, JWT_SECRET, {
     expiresIn: `${SESSION_DAYS}d`,
   });
   res.cookie(COOKIE_NAME, token, {

@@ -93,6 +93,10 @@ The first run downloads the base images and builds ours, which takes a minute or
 NoteDeck/
 ├── docker-compose.yml      ← the three services, networks and volume
 ├── .env.example            ← optional settings (copy to .env)
+├── LICENSE                 ← MIT
+├── .gitattributes          ← store text files with LF line endings
+├── .github/workflows/
+│   └── release.yml         ← CI: build, smoke-test, publish the release zip
 ├── api/                    ← backend
 │   ├── Dockerfile
 │   └── src/

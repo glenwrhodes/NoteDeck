@@ -471,7 +471,7 @@ Everything sits on pure black, and text on coloured shapes is always black. That
 ### Components and interaction choices
 
 - **Pills** are the only button shape. Labels sit to the right, as on a control panel. Hover brightens; press nudges down 1 px.
-- **The sidebar** marks the current page three ways: it turns amber, gets a light stripe, and carries `aria-current="page"`. When you're logged out the items are dimmed and coded `LCK`.
+- **The sidebar** marks the current page three ways: it turns amber, gets a light stripe on its right edge, and carries `aria-current="page"`. On phones the menu items are round pills. The stripe is a straight inset shadow and would show as a white half-circle on a round end, so there the active pill gets an inner ring that follows its curve instead. When you're logged out the items are dimmed and coded `LCK`.
 - **Record rows** each have a coloured tab with the record code, cycling through four colours so long lists stay scannable. The title, a one-line preview and a timestamp follow.
 - **Delete is two steps:** DELETE turns into a pulsing red CONFIRM DELETE + CANCEL, all in place. There's no browser pop-up, so it stays in the visual language.
 - **Feedback** always appears in the same place: teal notices ("RECORD CREATED"), red alerts with a title ("ACCESS DENIED"), and a row of blinking colour blocks while loading.

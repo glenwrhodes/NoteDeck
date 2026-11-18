@@ -498,12 +498,14 @@ All endpoints are under `/api`, and they send and receive JSON. Endpoints marked
 | POST | `/api/auth/login` | `{ username, password }` | `{ user }` + cookie. `401` wrong credentials |
 | POST | `/api/auth/logout` | | clears the cookie |
 | GET | `/api/auth/me` | | `{ user }` or `{ user: null }` |
-| GET 🔒 | `/api/notes` | | `{ notes: [{ id, title, preview, createdAt, updatedAt }] }`, newest first |
-| POST 🔒 | `/api/notes` | `{ title, body }` | `201 { note }` |
-| GET 🔒 | `/api/notes/:id` | | `{ note }` or `404` |
-| PUT 🔒 | `/api/notes/:id` | `{ title, body }` | `{ note }` or `404` |
-| DELETE 🔒 | `/api/notes/:id` | | `204` or `404` |
+| GET 🔒 | `/api/notes` | | `{ notes: [{ number, title, preview, createdAt, updatedAt }] }`, newest first |
+| POST 🔒 | `/api/notes` | `{ title, body }` | `201 { note }` with its new `number` |
+| GET 🔒 | `/api/notes/:number` | | `{ note: { number, title, body, createdAt, updatedAt } }` or `404` |
+| PUT 🔒 | `/api/notes/:number` | `{ title, body }` | `{ note }` or `404` |
+| DELETE 🔒 | `/api/notes/:number` | | `204` or `404` |
 | GET 🔒 | `/api/status` | | facts about the api, the db and your account |
+
+`:number` is the note's per-user number ([section 5](#note-numbers-that-give-nothing-away)): `/api/notes/1` is always *your* first note.
 
 Rules: usernames are 3-32 characters (`a-z 0-9 . _ -`, case-insensitive), passwords 8-128 characters, note titles 1-200 characters, note text up to 50,000 characters.
 

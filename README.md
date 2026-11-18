@@ -14,7 +14,7 @@ NoteDeck runs straight from its source code; there's nothing to install. Either:
 - **Clone it:** `git clone https://github.com/glenwrhodes/NoteDeck.git`
 - **Or download it without git:** on the repo page, click the green **Code** button, then **Download ZIP** ([direct link](https://github.com/glenwrhodes/NoteDeck/archive/refs/heads/main.zip)), and unzip it. No GitHub account needed. The folder is called `NoteDeck-main`.
 
-Every push is built, started and smoke-tested by CI ([section 10](#10-continuous-integration)), so the code on `main` is known to run.
+Every push is built, started and smoke-tested by CI ([section 10](#10-continuous-integration)). The CI badge above shows whether the latest run on `main` passed.
 
 **Requirements**
 

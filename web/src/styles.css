@@ -1,0 +1,1086 @@
+/* =====================================================================
+   NoteDeck: a sci-fi control-panel look.
+   Black background, rounded colour bars and elbows, bold uppercase labels.
+   Sections: 1 tokens, 2 base, 3 frame & elbows, 4 bars, 5 top bar,
+   6 sidebar, 7 pills, 8 page parts, 9 notes, 10 forms, 11 status,
+   12 feedback, 13 small screens, 14 reduced motion.
+   ===================================================================== */
+
+/* ---- 1. Design tokens --------------------------------------------- */
+:root {
+  --bg: #000;
+  --panel: #0b0b10;
+  --line: #24242e;
+  --text: #f4e7d6; /* warm off-white for reading text */
+  --muted: #a5998c;
+  --ink: #000; /* text on coloured shapes */
+
+  --c-amber: #ff9f2e;
+  --c-peach: #ffc48a;
+  --c-apricot: #f0824a;
+  --c-lilac: #c99ad8;
+  --c-violet: #9a8cf0;
+  --c-sky: #7cb8ff;
+  --c-teal: #5ed3c3;
+  --c-red: #ff5a43;
+  --c-ice: #e3ecff;
+
+  /* frame geometry */
+  --arm: 184px; /* width of the vertical arm (the sidebar column) */
+  --inner: 44px; /* radius of an elbow's inner curve */
+  --bar: 22px; /* thickness of every horizontal bar */
+  --outer: 72px; /* radius of an elbow's outer curve */
+  --gap: 6px; /* the black gap between segments */
+
+  --font: 'Barlow Condensed', 'Arial Narrow', 'Roboto Condensed', sans-serif;
+  color-scheme: dark;
+}
+
+/* Colour helpers: any element with .c-<name> gets --c, which shapes use. */
+.c-amber { --c: var(--c-amber); }
+.c-peach { --c: var(--c-peach); }
+.c-apricot { --c: var(--c-apricot); }
+.c-lilac { --c: var(--c-lilac); }
+.c-violet { --c: var(--c-violet); }
+.c-sky { --c: var(--c-sky); }
+.c-teal { --c: var(--c-teal); }
+.c-red { --c: var(--c-red); }
+.c-ice { --c: var(--c-ice); }
+
+/* ---- 2. Base ------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+}
+
+body {
+  font-family: var(--font);
+  font-weight: 500;
+  font-size: 1.125rem;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--c-amber);
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+::selection {
+  background: var(--c-amber);
+  color: var(--ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--c-ice);
+  outline-offset: 3px;
+}
+
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 10px;
+  z-index: 10;
+  padding: 8px 18px;
+  border-radius: 999px;
+  background: var(--c-ice);
+  color: var(--ink);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  text-decoration: none;
+}
+
+.skip-link:focus {
+  left: 16px;
+}
+
+/* ---- 3. Frame & elbows ----------------------------------------------
+   The page is a CSS grid. The left column holds the elbows and the
+   sidebar; the right column holds the top bar, the page and the footer.
+
+     [ elbow-top ][ topbar  ]   elbow curves DOWN-LEFT into the top bar
+     [ elbow-mid ][ content ]   elbow curves UP-LEFT into the content bar
+     [ sidebar   ][ content ]
+     [ elbow-foot][ footbar ]
+   ------------------------------------------------------------------ */
+.frame {
+  display: grid;
+  grid-template-columns: calc(var(--arm) + var(--inner)) minmax(0, 1fr);
+  grid-template-rows: auto 92px 1fr auto;
+  grid-template-areas:
+    'etop  topbar'
+    'emid  content'
+    'side  content'
+    'efoot footbar';
+  row-gap: var(--gap);
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 14px 18px 14px 14px;
+}
+
+.elbow {
+  position: relative;
+  background: var(--c);
+}
+
+/* The inner curve: a black box with one rounded corner, placed in the
+   elbow's corner, carves the concave curve out of the coloured block. */
+.elbow::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  width: var(--inner);
+  background: var(--bg);
+}
+
+.elbow--top {
+  grid-area: etop;
+  min-height: 118px;
+  border-bottom-left-radius: var(--outer);
+}
+
+.elbow--top::after {
+  top: 0;
+  bottom: var(--bar);
+  border-bottom-left-radius: var(--inner);
+}
+
+.elbow--mid {
+  grid-area: emid;
+  border-top-left-radius: var(--outer);
+}
+
+.elbow--mid::after {
+  top: var(--bar);
+  bottom: 0;
+  border-top-left-radius: var(--inner);
+}
+
+.elbow--foot {
+  grid-area: efoot;
+  min-height: 64px;
+  border-bottom-left-radius: calc(var(--outer) * 0.75);
+}
+
+.elbow--foot::after {
+  top: 0;
+  bottom: var(--bar);
+  border-bottom-left-radius: calc(var(--inner) * 0.6);
+}
+
+.elbow__label {
+  position: absolute;
+  right: calc(var(--inner) + 12px);
+  color: var(--ink);
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.12em;
+}
+
+.elbow--top .elbow__label {
+  bottom: calc(var(--bar) + 8px);
+}
+
+.elbow--mid .elbow__label {
+  top: calc(var(--bar) + 8px);
+}
+
+/* ---- 4. Bars ------------------------------------------------------- */
+.bar {
+  display: flex;
+  gap: var(--gap);
+  height: var(--bar);
+  flex-shrink: 0;
+}
+
+.bar__seg {
+  flex: 0 1 auto;
+  min-width: 12px;
+  background: var(--c);
+}
+
+.bar__seg--cap {
+  border-radius: 0 999px 999px 0;
+}
+
+/* Text that sits in a gap of the bar, in the bar's colour. */
+.bar__text {
+  display: flex;
+  align-items: center;
+  padding: 0 6px;
+  color: var(--c);
+  font-size: 0.85rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* ---- 5. Top bar -------------------------------------------------------- */
+.topbar {
+  grid-area: topbar;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.topbar__row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 24px;
+  padding: 0 4px 12px 20px;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  line-height: 1;
+}
+
+.brand__name {
+  color: var(--c-amber);
+  font-size: clamp(2.2rem, 5vw, 3.4rem);
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.brand__tag {
+  margin-top: 6px;
+  color: var(--c-lilac);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+}
+
+.usermenu {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+}
+
+.usermenu__who {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  line-height: 1.05;
+  margin-right: 6px;
+}
+
+.usermenu__label {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.usermenu__name {
+  color: var(--c-peach);
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ---- 6. Sidebar -------------------------------------------------------- */
+.sidebar {
+  grid-area: side;
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  width: var(--arm);
+}
+
+.nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.nav__item {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  height: 60px;
+  padding: 0 16px 7px 12px;
+  background: var(--c);
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: filter 0.15s, background-color 0.25s;
+}
+
+.nav__item:hover {
+  filter: brightness(1.15);
+}
+
+.nav__code {
+  font-size: 0.8rem;
+  opacity: 0.65;
+}
+
+/* Active item: switches to amber and gets a light stripe on the right. */
+.nav__item.is-active {
+  --c: var(--c-amber);
+  box-shadow: inset -10px 0 0 var(--c-ice);
+  padding-right: 24px;
+}
+
+/* Logged out: items are dimmed (they lead to the log-in screen). */
+.nav__item.is-locked {
+  filter: saturate(0.4) brightness(0.65);
+}
+
+.sidebar__fill {
+  flex: 1;
+  min-height: 60px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 16px 7px;
+  background: var(--c);
+  color: var(--ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+.sidebar__block {
+  height: 34px;
+  background: var(--c);
+}
+
+/* ---- 7. Pills (buttons) ---------------------------------------------- */
+.pill {
+  --c: var(--c-amber);
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-width: 120px;
+  min-height: 46px;
+  padding: 2px 22px 0;
+  border: 0;
+  border-radius: 999px;
+  background: var(--c);
+  color: var(--ink);
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: filter 0.15s, transform 0.1s;
+}
+
+/* .pill.c-* keeps the colour helper winning over the default above */
+.pill.c-amber { --c: var(--c-amber); }
+.pill.c-peach { --c: var(--c-peach); }
+.pill.c-apricot { --c: var(--c-apricot); }
+.pill.c-lilac { --c: var(--c-lilac); }
+.pill.c-violet { --c: var(--c-violet); }
+.pill.c-sky { --c: var(--c-sky); }
+.pill.c-teal { --c: var(--c-teal); }
+.pill.c-red { --c: var(--c-red); }
+
+.pill:hover {
+  filter: brightness(1.15);
+}
+
+.pill:active {
+  transform: translateY(1px);
+}
+
+.pill:disabled {
+  cursor: progress;
+  filter: saturate(0.4) brightness(0.7);
+}
+
+.pill--sm {
+  min-width: 96px;
+  min-height: 36px;
+  padding: 2px 16px 0;
+  font-size: 0.95rem;
+}
+
+/* The "are you sure?" state pulses. */
+.pill--alert {
+  animation: pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  50% {
+    filter: brightness(1.35);
+    box-shadow: 0 0 0 4px rgb(255 90 67 / 0.35);
+  }
+}
+
+/* ---- 8. Page parts ----------------------------------------------------- */
+.content {
+  grid-area: content;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.content:focus {
+  outline: none;
+}
+
+.content__body {
+  flex: 1;
+  width: 100%;
+  max-width: 1080px;
+  padding: 30px 6px 40px 28px;
+}
+
+.screen-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px 24px;
+  margin-bottom: 26px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--line);
+}
+
+.screen-head__text {
+  min-width: 0;
+  flex: 1 1 320px;
+}
+
+.screen-head__code {
+  color: var(--c-lilac);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.screen-head__title {
+  margin: 2px 0 0;
+  color: var(--c-amber);
+  font-size: clamp(2rem, 4.2vw, 3.1rem);
+  font-weight: 700;
+  line-height: 1.05;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.screen-head__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.footbar {
+  grid-area: footbar;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.footbar__text {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 26px;
+  margin: 0 0 10px 20px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.page-foot {
+  margin-top: 36px;
+}
+
+/* ---- 9. Notes ---------------------------------------------------------- */
+.count {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.count__num {
+  color: var(--c-peach);
+  font-size: 1.6rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.records {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.record {
+  display: grid;
+  grid-template-columns: 116px minmax(0, 1fr) auto;
+  gap: 20px;
+  min-height: 78px;
+  color: var(--text);
+  text-decoration: none;
+}
+
+.record__tab {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
+  padding: 0 12px 8px;
+  border-radius: 39px 0 0 39px;
+  background: var(--c);
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  transition: filter 0.15s;
+}
+
+.record__main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  padding: 8px 0;
+  border-bottom: 2px solid var(--line);
+  transition: border-color 0.15s;
+}
+
+.record__title {
+  color: var(--c-peach);
+  font-size: 1.4rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  transition: color 0.15s;
+}
+
+.record__preview {
+  margin-top: 2px;
+  color: var(--muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.record__stamp {
+  align-self: center;
+  padding-right: 6px;
+  color: var(--c-lilac);
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  white-space: nowrap;
+}
+
+.record:hover .record__tab,
+.record:focus-visible .record__tab {
+  filter: brightness(1.2);
+}
+
+.record:hover .record__title,
+.record:focus-visible .record__title {
+  color: var(--c-amber);
+}
+
+.record:hover .record__main {
+  border-color: var(--c);
+}
+
+.meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 36px;
+  margin: -6px 0 26px;
+}
+
+.meta dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.meta dd {
+  margin: 0;
+  color: var(--c-peach);
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* The note text, with a rounded lilac rail down its left side. */
+.readout {
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr);
+  gap: 24px;
+}
+
+.readout::before {
+  content: '';
+  border-radius: 6px;
+  background: linear-gradient(var(--c-lilac) 0 70%, var(--c-violet) 70%);
+}
+
+.readout__text {
+  margin: 0;
+  padding: 4px 0;
+  font-size: 1.3rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.readout__text--empty {
+  color: var(--muted);
+  font-style: italic;
+}
+
+.empty {
+  display: grid;
+  justify-items: start;
+  gap: 12px;
+  padding: 16px 0;
+}
+
+.empty__title {
+  color: var(--c-peach);
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.empty__text {
+  margin: 0 0 12px;
+  color: var(--muted);
+  font-size: 1.2rem;
+}
+
+/* ---- 10. Forms --------------------------------------------------------- */
+.form {
+  display: grid;
+  gap: 22px;
+  max-width: 900px;
+}
+
+.form__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+}
+
+.field {
+  display: grid;
+  gap: 6px;
+}
+
+.field__label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  color: var(--c-lilac);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+
+.field__count {
+  color: var(--muted);
+  font-weight: 500;
+  letter-spacing: 0.1em;
+}
+
+/* Inputs: a thick coloured cap on the left, rounded on the right. */
+.field__input {
+  width: 100%;
+  padding: 10px 20px;
+  border: 2px solid #34345a;
+  border-left: 14px solid var(--c-violet);
+  border-radius: 6px 26px 26px 6px;
+  background: var(--panel);
+  color: var(--text);
+  font-size: 1.3rem;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.field__input:focus {
+  outline: none;
+  border-color: var(--c-amber);
+  box-shadow: 0 0 0 3px rgb(255 159 46 / 0.25);
+}
+
+.field__input--area {
+  min-height: 340px;
+  resize: vertical;
+  line-height: 1.5;
+  border-radius: 6px 26px 26px 6px;
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.auth {
+  max-width: 540px;
+  margin: 2vh auto 0;
+}
+
+.auth .screen-head {
+  border-bottom: 0;
+  margin-bottom: 14px;
+  padding-bottom: 0;
+}
+
+.auth__panel {
+  display: grid;
+  gap: 20px;
+  padding: 26px 0 28px;
+}
+
+.auth__switch {
+  margin-left: 8px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
+}
+
+.auth__switch a {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ---- 11. Status screen --------------------------------------------- */
+.chain {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 0;
+  margin: 0 0 30px;
+  padding: 0;
+  list-style: none;
+}
+
+.chain__node {
+  padding: 8px 22px 6px;
+  border-radius: 999px;
+  background: var(--c);
+  color: var(--ink);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* The link between two nodes: a line with the port number on it. */
+.chain__link {
+  position: relative;
+  min-width: 78px;
+  padding: 0 10px 18px;
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-align: center;
+}
+
+.chain__link::after {
+  content: '';
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  bottom: 6px;
+  height: 4px;
+  border-radius: 2px;
+  background: repeating-linear-gradient(90deg, var(--c-peach) 0 10px, transparent 10px 16px);
+  background-size: 32px 4px;
+  animation: flow 1s linear infinite;
+}
+
+@keyframes flow {
+  to {
+    background-position: 32px 0;
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  border: 2px solid var(--line);
+  border-radius: 24px 0 24px 0;
+  overflow: hidden;
+}
+
+.card__head {
+  display: flex;
+  justify-content: space-between;
+  margin: 0;
+  padding: 8px 16px 6px 20px;
+  background: var(--c);
+  color: var(--ink);
+  font-size: 1.15rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.card__code {
+  opacity: 0.6;
+  font-size: 0.85rem;
+}
+
+.card__body {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 16px 20px 18px;
+}
+
+.card__row {
+  display: grid;
+  grid-template-columns: 100px minmax(0, 1fr);
+  gap: 12px;
+}
+
+.card__row dt {
+  color: var(--muted);
+  font-size: 0.85rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding-top: 2px;
+}
+
+.card__row dd {
+  margin: 0;
+  color: var(--text);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.online {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-teal);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.online::before {
+  content: '';
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--c-teal);
+  animation: blink 1.6s ease-in-out infinite;
+}
+
+/* ---- 12. Feedback ------------------------------------------------------ */
+.loading {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 0;
+  color: var(--c-peach);
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+.loading__blocks {
+  display: flex;
+  gap: 5px;
+}
+
+.loading__blocks span {
+  width: 24px;
+  height: 14px;
+  background: var(--c-amber);
+  animation: blink 1.2s ease-in-out infinite;
+}
+
+.loading__blocks span:nth-child(2) { animation-delay: 0.15s; background: var(--c-peach); }
+.loading__blocks span:nth-child(3) { animation-delay: 0.3s; background: var(--c-lilac); }
+.loading__blocks span:nth-child(4) { animation-delay: 0.45s; background: var(--c-sky); border-radius: 0 7px 7px 0; }
+
+@keyframes blink {
+  50% {
+    opacity: 0.15;
+  }
+}
+
+.alert,
+.notice {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.alert::before,
+.notice::before {
+  content: '';
+  flex: 0 0 12px;
+  border-radius: 6px;
+  background: var(--c-red);
+}
+
+.alert__title {
+  color: var(--c-red);
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.alert__text {
+  color: var(--c-peach);
+  font-size: 1.15rem;
+}
+
+.notice {
+  align-items: center;
+  min-height: 34px;
+  color: var(--c-teal);
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.notice::before {
+  align-self: stretch;
+  background: var(--c-teal);
+}
+
+/* ---- 13. Small screens ----------------------------------------------
+   Under 760px wide the elbows are hidden and the sidebar becomes a row
+   of pills under the top bar.
+   ------------------------------------------------------------------ */
+@media (max-width: 760px) {
+  .frame {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto 1fr auto;
+    grid-template-areas:
+      'topbar'
+      'side'
+      'content'
+      'footbar';
+    padding: 10px;
+  }
+
+  .elbow,
+  .sidebar__fill,
+  .sidebar__block {
+    display: none;
+  }
+
+  .topbar__row {
+    padding-left: 4px;
+  }
+
+  .sidebar {
+    width: auto;
+    padding: 8px 0 2px;
+  }
+
+  .nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .nav__item {
+    height: 40px;
+    gap: 14px;
+    align-items: center;
+    padding: 2px 18px 0 14px;
+    border-radius: 999px;
+    font-size: 1rem;
+  }
+
+  .nav__item.is-active {
+    padding-right: 26px;
+  }
+
+  .content__body {
+    padding: 22px 2px 32px;
+  }
+
+  .record {
+    grid-template-columns: 84px minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .record__tab {
+    font-size: 0.8rem;
+    padding-right: 8px;
+  }
+
+  .record__stamp {
+    display: none;
+  }
+
+  .footbar__text {
+    margin-left: 4px;
+  }
+}
+
+/* ---- 14. Reduced motion --------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

@@ -458,17 +458,28 @@ textarea {
   display: flex;
   flex-direction: column;
   min-width: 0;
+  min-height: 0;
 }
 
-.content:focus {
+/* The only part of the screen that scrolls. Its thin lilac scrollbar sits
+   against the right edge of the frame. */
+.content__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+  scrollbar-color: var(--c-lilac) transparent;
+}
+
+.content__scroll:focus {
   outline: none;
 }
 
 .content__body {
-  flex: 1;
   width: 100%;
   max-width: 1080px;
-  padding: 30px 6px 40px 28px;
+  padding: 30px 12px 40px 28px;
 }
 
 .screen-head {

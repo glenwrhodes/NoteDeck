@@ -516,20 +516,22 @@ Rules: usernames are 3-32 characters (`a-z 0-9 . _ -`, case-insensitive), passwo
 
 ---
 
-## 10. Continuous integration and releases
+## 10. Continuous integration
 
-Every push to `main` runs [`.github/workflows/release.yml`](.github/workflows/release.yml) on a fresh GitHub-hosted Linux machine. It is the same Docker workflow as in this README, automated:
+Every push and every pull request runs [`.github/workflows/ci.yml`](.github/workflows/ci.yml) on a fresh GitHub-hosted Linux machine. It does exactly what this README tells you to do, starting from a clean checkout with no `node_modules` and no leftovers:
 
-1. **Package** `NoteDeck.zip` with `git archive`. It takes only committed files, and only `README.md`, `LICENSE`, `docker-compose.yml`, `.env.example`, `api/` and `web/`, so `node_modules`, `.env` files, the tests and the CI config can't end up in the download.
-2. **Unzip it into an empty folder** and run `docker compose up --build --wait` *from there*. That proves the zip itself is complete, not just the repo.
-3. **Smoke test:** `node scripts/smoke-test.mjs` runs all 39 checks against the running stack. If anything fails, the job prints the containers' logs and stops: nothing is published.
-4. **Publish** a GitHub release named `v1.0.<run number>` with `NoteDeck.zip` attached, and mark it *latest*. That's why the download link at the top (`releases/latest/download/NoteDeck.zip`) always gets the newest tested build.
+1. **Build and start:** `docker compose up --build --detach --wait`. This builds both images and waits for all three health checks.
+2. **Smoke test:** `node scripts/smoke-test.mjs` runs all 39 checks against the running stack.
+3. **If anything fails,** the job prints `docker compose ps` and every container's logs, so you can see why without re-running it on your own PC.
+4. **Clean up:** `docker compose down --volumes`.
+
+The green or red badge at the top of this README shows the result for `main`, and pull requests show it next to the merge button.
 
 Things to notice in the workflow file:
 
-- `permissions: contents: write` lets the job's built-in `GITHUB_TOKEN` create releases. No personal token or secret is needed.
-- `concurrency: release` makes two quick pushes queue up instead of publishing at the same time.
-- The release is created with the `gh` CLI, which is preinstalled on GitHub's runners.
+- `permissions: contents: read`: the job only needs to read the code, so its built-in token is read-only.
+- `concurrency` with `cancel-in-progress`: push twice quickly and the older run is cancelled, because only the newest code matters.
+- `if: failure()` and `if: always()` choose which steps still run after a failure: logs only on failure, clean-up every time.
 - You can also start a run by hand from the repo's **Actions** tab (`workflow_dispatch`).
 
 ---

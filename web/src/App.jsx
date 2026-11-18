@@ -24,8 +24,9 @@ export default function App() {
         <Route element={<RequireAuth />}>
           <Route path="notes" element={<NotesList />} />
           <Route path="notes/new" element={<NoteNew />} />
-          <Route path="notes/:id" element={<NoteView />} />
-          <Route path="notes/:id/edit" element={<NoteEdit />} />
+          {/* :number is the note's per-user number: /notes/1 is your first note */}
+          <Route path="notes/:number" element={<NoteView />} />
+          <Route path="notes/:number/edit" element={<NoteEdit />} />
           <Route path="status" element={<Status />} />
         </Route>
 

@@ -537,5 +537,11 @@ Things to notice in the workflow file:
 | `Cannot connect to the Docker daemon` | Start Docker Desktop and wait until it says it's running. |
 | My UI/API change doesn't show up | The images contain the code: rebuild with `docker compose up --build -d --wait`. |
 | Changed `POSTGRES_PASSWORD` and the API can't connect | Postgres only sets the password when it creates a new database. Either change it back, or `docker compose down -v` to start fresh (deletes data). |
-| I want a completely clean slate | `docker compose down -v --rmi local` removes containers, networks, the volume and the images built for this project. |
+| I want a completely clean slate | `docker compose down -v --rmi all` removes the containers, networks, the volume and every image the services use (ours and the downloaded Postgres image). |
 | See what the API is doing | `docker compose logs -f api` shows every request with its status code and time. |
+
+---
+
+## 12. License
+
+[MIT](LICENSE). Use it, change it, teach with it.

@@ -316,6 +316,8 @@ textarea {
   flex-direction: column;
   gap: var(--gap);
   width: var(--arm);
+  min-height: 0;
+  overflow: hidden;
 }
 
 .nav {

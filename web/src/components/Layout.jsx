@@ -36,6 +36,15 @@ const FOOT_BAR = [
 
 export default function Layout() {
   const { user } = useAuth();
+  const { pathname } = useLocation();
+  const scrollRef = useRef(null);
+
+  // A new page starts at the top. The browser only does this by itself for
+  // full page loads, and here the page area (not the window) is what scrolls.
+  useEffect(() => {
+    scrollRef.current?.scrollTo(0, 0);
+    window.scrollTo(0, 0); // on phones the whole page scrolls instead
+  }, [pathname]);
 
   return (
     <div className="frame">

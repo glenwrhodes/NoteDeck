@@ -25,7 +25,7 @@ function check(name, condition, detail = '') {
 // A tiny "browser": remembers its session cookie between requests.
 function client() {
   let cookie = '';
-  return async function call(method, path, body, raw) {
+  const call = async (method, path, body, raw) => {
     const res = await fetch(BASE + path, {
       method,
       headers: {

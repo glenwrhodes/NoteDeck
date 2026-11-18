@@ -51,8 +51,8 @@ jobs:
 
       - name: Unzip into a clean folder
         run: |
-          mkdir -p "$APP_DIR/.."
-          unzip -q NoteDeck.zip -d "$APP_DIR/.."
+          mkdir -p /tmp/release-check
+          unzip -q NoteDeck.zip -d /tmp/release-check
           ls -la "$APP_DIR"
 
       - name: Build the images and start the stack

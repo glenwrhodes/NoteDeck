@@ -7,6 +7,7 @@ import { pool } from './db.js';
 const JWT_SECRET = process.env.JWT_SECRET;
 const COOKIE_NAME = 'notedeck_session';
 const SESSION_DAYS = 7;
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export const hashPassword = (password) => bcrypt.hash(password, 12);
 export const checkPassword = (password, hash) => bcrypt.compare(password, hash);

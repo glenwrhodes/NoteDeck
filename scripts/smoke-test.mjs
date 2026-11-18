@@ -1,7 +1,7 @@
 // End-to-end smoke test for a running NoteDeck stack.
 //
 //   docker compose up --build -d --wait
-//   node scripts/smoke-test.mjs            (needs Node 18+ on your PC)
+//   node scripts/smoke-test.mjs            (needs Node 20+ on your PC)
 //
 // It goes through the browser's entry point (http://localhost:8088), so every
 // request also passes through nginx in the web container. It registers two

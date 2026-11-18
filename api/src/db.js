@@ -54,6 +54,7 @@ const SCHEMA = `
    WHERE users.id = top.user_id AND users.note_counter < top.n;
   ALTER TABLE notes ALTER COLUMN number SET NOT NULL;
 
+  CREATE UNIQUE INDEX IF NOT EXISTS users_public_id_idx ON users (public_id);
   CREATE UNIQUE INDEX IF NOT EXISTS notes_user_number_idx ON notes (user_id, number);
   CREATE INDEX IF NOT EXISTS notes_user_updated_idx ON notes (user_id, updated_at DESC);
 `;

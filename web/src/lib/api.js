@@ -44,10 +44,11 @@ export const api = {
   logout: () => request('POST', '/auth/logout'),
 
   listNotes: () => request('GET', '/notes'),
-  getNote: (id) => request('GET', `/notes/${id}`),
+  // Notes are addressed by their per-user number (1, 2, 3... for each user).
+  getNote: (number) => request('GET', `/notes/${number}`),
   createNote: (note) => request('POST', '/notes', note),
-  updateNote: (id, note) => request('PUT', `/notes/${id}`, note),
-  deleteNote: (id) => request('DELETE', `/notes/${id}`),
+  updateNote: (number, note) => request('PUT', `/notes/${number}`, note),
+  deleteNote: (number) => request('DELETE', `/notes/${number}`),
 
   health: () => request('GET', '/health'),
   status: () => request('GET', '/status'),

@@ -19,7 +19,9 @@ function readCredentials(body) {
   return { username, password };
 }
 
-const publicUser = (u) => ({ id: u.id, username: u.username, createdAt: u.created_at });
+// What the browser gets to see about a user. The database id is left out: it
+// counts across all accounts, so it would hint at how many users exist.
+const publicUser = (u) => ({ username: u.username, createdAt: u.created_at });
 
 router.post('/register', async (req, res) => {
   const { username, password } = readCredentials(req.body);

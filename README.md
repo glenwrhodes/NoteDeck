@@ -45,7 +45,7 @@ Every push is built, started and smoke-tested by CI ([section 10](#10-continuous
 
 ## 1. Quick start
 
-Unzip the download (or clone the repo), open a terminal in the `NoteDeck` folder, and run:
+Open a terminal in the project folder (`NoteDeck`, or `NoteDeck-main` if you used Download ZIP) and run:
 
 ```bash
 docker compose up --build

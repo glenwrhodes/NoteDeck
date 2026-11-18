@@ -1,0 +1,14 @@
+{
+  "name": "notedeck-api",
+  "version": "1.0.0",
+  "private": true,
+  "description": "NoteDeck backend: an Express REST API backed by PostgreSQL",
+  "type": "module",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
